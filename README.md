@@ -32,7 +32,7 @@
 
 ## Notes
 
-You can **directly refactor this program into a server-client structure to meet the document's requirements**, instead of focusing on implementing the "TODO" annotations in these files. This is just a demo, meant to offer some useful methods and a basic project structure.
+I suggest that you first complete the single-player mode. If you feel confident, you can directly reconstruct this project to include a two-player mode.
 
 If you encounter any GUI issues while rendering multiple game boards, maybe you can check the $start$ method in the main entry point.
 

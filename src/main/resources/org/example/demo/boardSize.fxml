@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.demo.BoardSizeController" spacing="10" alignment="CENTER" prefWidth="600" prefHeight="400">
+
+    <Label text="设置棋盘大小" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+    <TextField fx:id="sizeField" promptText="行数"/>
+    <Button fx:id="confirmButton" text="确认" onAction="#handleConfirmButton"/>
+
+    <!-- 等待信息，在用户点击确认后显示 -->
+    <Label fx:id="waitingLabel" text="等待服务器发送棋盘..." visible="false" style="-fx-font-size: 14px; -fx-font-style: italic;"/>
+
+</VBox>

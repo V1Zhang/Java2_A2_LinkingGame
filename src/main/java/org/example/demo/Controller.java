@@ -1,12 +1,16 @@
 package org.example.demo;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public class Controller {
@@ -16,14 +20,43 @@ public class Controller {
 
     @FXML
     private GridPane gameBoard;
-
+    private GameClient gameClient;
     public static Game game;
-
+    private boolean isYourTurn;
+    private long turnStartTime;
+    private int score = 0;
     int[] position = new int[3];
-
+    // postion[0]表示是选中的一对位置的第一个/第二个
     @FXML
     public void initialize() {
 
+
+
+    }
+
+    public void setGameClient(GameClient gameClient) {
+        this.gameClient = gameClient;
+    }
+
+    public void setGame(Game game) {
+        Controller.game = game;
+    }
+
+
+    public void setTurn(boolean isYourTurn) {
+        Platform.runLater(() -> {
+            this.isYourTurn = isYourTurn;
+            if (isYourTurn) {
+                System.out.println("It's your turn!");
+                turnStartTime = System.currentTimeMillis(); // Start the timer
+            } else {
+                System.out.println("Waiting for opponent's turn...");
+            }
+        });
+    }
+
+    public void showVictoryMessage() {
+        System.out.println("Congratulations, you won!");
     }
 
     public void createGameBoard() {
@@ -41,13 +74,21 @@ public class Controller {
                 button.setGraphic(imageView);
                 int finalRow = row;
                 int finalCol = col;
-                button.setOnAction( _ -> handleButtonPress(finalRow, finalCol));
+                System.out.println("   "+isYourTurn);
+                button.setOnAction( event -> handleButtonPress(finalRow, finalCol));
                 gameBoard.add(button, col, row);
             }
         }
     }
-
+    public void updateScore(int points) {
+        score += points;
+        scoreLabel.setText(String.valueOf(score));
+    }
     private void handleButtonPress(int row, int col) {
+        if (!isYourTurn) {
+            System.out.println("不是你的回合！");
+            return;
+        }
         System.out.println("Button pressed at: " + row + ", " + col);
         if(position[0] == 0){
             position[1] = row;
@@ -56,16 +97,49 @@ public class Controller {
         }else{
             boolean change = game.judge(position[1], position[2], row, col);
             position[0] = 0;
+            drawLineBetweenBlocks(position[1], position[2], row, col);
             if(change){
                 // TODO: handle the grid deletion logic
+                game.deleteGrid(position[1], position[2]);
+                game.deleteGrid(row, col);
+                System.out.println("Grids at (" + position[1] + ", " + position[2] + ") and (" + row + ", " + col + ") deleted.");
+                Button button1 = (Button) gameBoard.getChildren().get(position[1] * game.col + position[2]);
+                Button button2 = (Button) gameBoard.getChildren().get(row * game.col + col);
+                button1.setGraphic(null);
+                button2.setGraphic(null);
+                long moveTime = System.currentTimeMillis();
+                game.increaseScore(5, moveTime, 1);
+                gameClient.sendMessage("Link " + position[1] + " " + position[2] + " " + row + " " + col);
             }
         }
+    }
+    private void drawLineBetweenBlocks(int row1, int col1, int row2, int col2) {
+        double startX = col1; // 40是每个Button的宽度
+        double startY = row1;
+        double endX = col2;
+        double endY = row2;
+
+        Line line = new Line(startX, startY, endX, endY);
+        line.setStroke(Color.BLUE); // 设置连线颜色
+        line.setStrokeWidth(2);
+
+        // 将连线添加到 gameBoard
+        gameBoard.getChildren().add(line);
+
+        // 可以在一段时间后将连线移除
+        new Thread(() -> {
+            try {
+                Thread.sleep(500); // 显示500毫秒
+            } catch (InterruptedException ignored) { }
+            Platform.runLater(() -> gameBoard.getChildren().remove(line));
+        }).start();
     }
 
     @FXML
     private void handleReset() {
 
     }
+
 
     public ImageView addContent(int content){
         return switch (content) {

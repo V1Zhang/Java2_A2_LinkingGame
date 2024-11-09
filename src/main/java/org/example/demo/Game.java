@@ -1,7 +1,9 @@
 package org.example.demo;
 
-public class Game {
+import java.util.*;
 
+public class Game {
+    private Controller controller;
     // row length
     int row;
 
@@ -10,27 +12,73 @@ public class Game {
 
     // board content
     int[][] board;
-
-    public Game(int[][] board){
+    private int score = 0;
+    public Game(int[][] board, Controller controller){
         this.board = board;
         this.row = board.length;
         this.col = board[0].length;
+        this.controller = controller;
+    }
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 
+    public void increaseScore(int basePoints, long reactionTime, int turns) {
+        int reactionBonus = calculateReactionBonus(reactionTime);
+        int directnessBonus = calculateDirectnessBonus(turns);
+        int totalPoints = basePoints + reactionBonus + directnessBonus;
+        score += totalPoints;
+        controller.updateScore(score);
+    }
+    // Calculate bonus points based on reaction time: faster responses get more points
+    private int calculateReactionBonus(long reactionTime) {
+        if (reactionTime < 1000) {  // Less than 1 second
+            return 10;
+        } else if (reactionTime < 2000) {  // 1 to 2 seconds
+            return 5;
+        } else if (reactionTime < 3000) {  // 2 to 3 seconds
+            return 2;
+        } else {
+            return 0;
+        }
+    }
+
+    // Calculate bonus points based on directness: fewer turns yield more points
+    private int calculateDirectnessBonus(int turns) {
+        if (turns == 1) {  // Matched in the first turn
+            return 10;
+        } else if (turns <= 3) {  // Matched within three turns
+            return 5;
+        } else if (turns <= 5) {  // Matched within five turns
+            return 2;
+        } else {
+            return 0;
+        }
+    }
+
+    public int getScore() {
+        return score;
+    }
     // randomly initialize the game board
     public static int[][] SetupBoard(int row, int col) {
-
         // TODO: randomly initialize board
-
-        return new int[][]{
-                {0, 0, 0, 0, 0, 0},
-                {0, 1, 1, 2, 2, 0},
-                {0, 3, 3, 4, 4, 0},
-                {0, 5, 5, 6, 6, 0},
-                {0, 7, 7, 8, 8, 0},
-                {0, 0, 0, 0, 0, 0}
-        };
+        int[][] board = new int[row+2][col+2];
+        List<Integer> values = new ArrayList<>();
+        // 准备成对的元素
+        for (int i = 1; i <= (row * col) / 2; i++) {
+            values.add(i);
+            values.add(i);
+        }
+        Collections.shuffle(values);
+        int index = 0;
+        for (int i = 1; i <= row; i++) {
+            for (int j = 1; j <= col; j++) {
+                board[i][j] = values.get(index++);
+            }
+        }
+        return board;
     }
+
 
     // judge the validity of an operation
     public boolean judge(int row1, int col1, int row2, int col2){
@@ -72,6 +120,13 @@ public class Game {
             }
 
         return false;
+    }
+    public void deleteGrid(int row, int col) {
+        if (row < 0 || row >= board.length || col < 0 || col >= board[0].length) {
+            System.out.println("Invalid grid position.");
+            return;
+        }
+        board[row][col] = 0;
     }
 
     // judge whether

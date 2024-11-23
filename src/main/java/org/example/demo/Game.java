@@ -3,7 +3,6 @@ package org.example.demo;
 import java.util.*;
 
 public class Game {
-    private Controller controller;
     // row length
     int row;
 
@@ -12,23 +11,17 @@ public class Game {
 
     // board content
     int[][] board;
-    private int score = 0;
-    public Game(int[][] board, Controller controller){
+
+    public Game(int[][] board){
         this.board = board;
         this.row = board.length;
         this.col = board[0].length;
-        this.controller = controller;
-    }
-    public void setController(Controller controller) {
-        this.controller = controller;
     }
 
-    public void increaseScore(int basePoints, long reactionTime, int turns) {
+    public int increaseScore(long reactionTime, int turns) {
         int reactionBonus = calculateReactionBonus(reactionTime);
         int directnessBonus = calculateDirectnessBonus(turns);
-        int totalPoints = basePoints + reactionBonus + directnessBonus;
-        score += totalPoints;
-        controller.updateScore(score);
+        return reactionBonus + directnessBonus;
     }
     // Calculate bonus points based on reaction time: faster responses get more points
     private int calculateReactionBonus(long reactionTime) {
@@ -36,29 +29,26 @@ public class Game {
             return 10;
         } else if (reactionTime < 2000) {  // 1 to 2 seconds
             return 5;
-        } else if (reactionTime < 3000) {  // 2 to 3 seconds
-            return 2;
         } else {
-            return 0;
+            return 2;
         }
     }
 
     // Calculate bonus points based on directness: fewer turns yield more points
     private int calculateDirectnessBonus(int turns) {
-        if (turns == 1) {  // Matched in the first turn
+        if (turns == 1) {  // Matched with 1 line
             return 10;
-        } else if (turns <= 3) {  // Matched within three turns
+        } else if (turns == 2) {  // Matched with 2 line
             return 5;
-        } else if (turns <= 5) {  // Matched within five turns
+        } else if (turns == 3) {  // Matched with 3 line
             return 2;
         } else {
             return 0;
         }
     }
 
-    public int getScore() {
-        return score;
-    }
+
+
     // randomly initialize the game board
     public static int[][] SetupBoard(int row, int col) {
         // TODO: randomly initialize board
@@ -66,8 +56,9 @@ public class Game {
         List<Integer> values = new ArrayList<>();
         // 准备成对的元素
         for (int i = 1; i <= (row * col) / 2; i++) {
-            values.add(i);
-            values.add(i);
+            int num = 1 + (int) (Math.random() * 11);
+            values.add(num);
+            values.add(num);
         }
         Collections.shuffle(values);
         int index = 0;
@@ -76,13 +67,30 @@ public class Game {
                 board[i][j] = values.get(index++);
             }
         }
+        while (!hasValidConnection(board, row, col)) {
+            board = SetupBoard(row, col); // Recurse to regenerate the board
+        }
         return board;
+    }
+    public static boolean hasValidConnection(int[][] board, int row, int col) {
+        for (int i = 1; i <= row*col; i++) {
+            int row1 = i / row + 1;
+            int col1 = i % row;
+            for (int j = i + 1; j <= col; j++) {
+                int row2 = j / row + 1;
+                int col2 = j % row;
+                if (board[row1][col1] == board[row2][col2] && judge(row1, col1, row2, col2, board)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 
     // judge the validity of an operation
-    public boolean judge(int row1, int col1, int row2, int col2){
-        if ((board[row1][col1] != board[row2][col2]) || (row1 == row2 && col1 == col2)) {
+    public static boolean judge(int row1, int col1, int row2, int col2, int[][] board){
+        if ((board[row1][col1] != board[row2][col2]) || (row1 == row2 && col1 == col2) || (board[row1][col1] == 0) || (board[row2][col2]==0)) {
             return false;
         }
 
@@ -130,7 +138,7 @@ public class Game {
     }
 
     // judge whether
-    private boolean isDirectlyConnected(int row1, int col1, int row2, int col2, int[][] board) {
+    static boolean isDirectlyConnected(int row1, int col1, int row2, int col2, int[][] board) {
         if (row1 == row2) {
             int minCol = Math.min(col1, col2);
             int maxCol = Math.max(col1, col2);

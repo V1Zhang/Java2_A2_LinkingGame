@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.demo.GameOverController"
+      alignment="CENTER" spacing="20"
+      prefWidth="600.0" prefHeight="400.0">
+
+    <!-- 显示游戏结果的 Label -->
+    <Label fx:id="resultLabel" text="失败:(" style="-fx-font-size: 24px; -fx-text-fill: black;" />
+
+    <!-- 回到主界面的按钮 -->
+    <Button text="回到主界面" onAction="#handleReturnToMain" prefWidth="150.0" prefHeight="40.0" />
+
+    <!-- 退出游戏的按钮 -->
+    <Button text="退出游戏" onAction="#handleExitGame" prefWidth="150.0" prefHeight="40.0" />
+</VBox>

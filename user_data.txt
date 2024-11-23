@@ -1,0 +1,5 @@
+hjw,20040229,112,offline,2024-11-23 17:04:42 对手: zwy | 结果: win | 得分: 112
+test,123456,0,offline,
+lxq,111111,0,offline,
+hhh,123456,0,offline,
+zwy,Zwy20040430,92,offline,2024-11-23 17:04:42 对手: hjw | 结果: lose | 得分: 92

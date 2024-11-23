@@ -5,16 +5,24 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ListView?>
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.example.demo.BoardSizeController" spacing="10" alignment="CENTER" prefWidth="600" prefHeight="400">
 
-    <Label text="设置棋盘大小" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <Label fx:id="titleLabel" text="设置棋盘大小" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
 
     <TextField fx:id="sizeField" promptText="行数"/>
     <Button fx:id="confirmButton" text="确认" onAction="#handleConfirmButton"/>
 
+    <!-- 新增的按钮用于查看等待队列中的玩家 -->
+    <Button fx:id="viewPlayersButton" text="查看等待队列" onAction="#handleViewPlayersButton"/>
+
+    <!-- 新增的列表展示当前等待队列中的玩家 -->
+    <ListView fx:id="waitingListView" visible="false" prefHeight="200" prefWidth="200" onMouseClicked="#handlePlayerSelect"/>
+
+
     <!-- 等待信息，在用户点击确认后显示 -->
-    <Label fx:id="waitingLabel" text="等待服务器发送棋盘..." visible="false" style="-fx-font-size: 14px; -fx-font-style: italic;"/>
+    <Label fx:id="waitingLabel" text="···等待服务器发送棋盘···" visible="false" style="-fx-font-size: 18px; -fx-font-style: italic;"/>
 
 </VBox>

@@ -4,17 +4,36 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.Pane?>
 
 <VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.demo.Controller">
+  <!-- 左上角的用户显示 -->
+  <HBox spacing="5" alignment="TOP_LEFT">
+    <Label text="Current User: " />
+    <Label fx:id="currentUserLabel" text="None" />
+  </HBox>
+
+  <!-- 中间显示棋盘大小 -->
+  <HBox spacing="5" alignment="CENTER">
+    <Label text="Board Size: " />
+    <Label fx:id="boardSizeLabel" text="4" />
+  </HBox>
+
+  <!-- 右上角的对手显示 -->
+  <HBox spacing="5" alignment="TOP_RIGHT">
+    <Label text="Opponent: " />
+    <Label fx:id="opponentLabel" text="None" />
+  </HBox>
+
+  <!-- 显示分数的部分 -->
   <HBox spacing="10" alignment="CENTER">
     <Label text="Score: " />
     <Label fx:id="scoreLabel" text="0" />
   </HBox>
 
-  <GridPane fx:id="gameBoard" VBox.vgrow="ALWAYS" hgap="5" vgap="5">
-  </GridPane>
-
-  <HBox spacing="10" alignment="CENTER">
-    <Button text="Reset" fx:id="resetButton" onAction="#handleReset"/>
-  </HBox>
+  <!-- 使用 Pane 包裹 gameBoard 以便在其上绘制连线 -->
+  <Pane fx:id="gameBoardPane" VBox.vgrow="ALWAYS">
+    <GridPane fx:id="gameBoard" hgap="5" vgap="5" />
+  </Pane>
 </VBox>
+

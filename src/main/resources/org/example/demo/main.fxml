@@ -7,9 +7,9 @@
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.example.demo.MainController" spacing="20" alignment="CENTER" prefWidth="600" prefHeight="400">
 
-    <Text text="欢迎使用游戏系统" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <Text text="欢迎来到消消乐小游戏" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
 
-    <Button fx:id="loginButton" text="登录" onAction="#handleLoginButton"/>
-    <Button text="注册" onAction="#handleRegisterButton"/>
+    <Button fx:id="Button" text="进入游戏" onAction="#handleButton"/>
+    <Button fx:id="viewHistoryButton" text="查看排行榜" onAction="#handleViewHistoryAndOnline"/>
 
 </VBox>

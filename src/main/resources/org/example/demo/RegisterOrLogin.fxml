@@ -7,13 +7,17 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.layout.HBox?>
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.example.demo.LoginController" spacing="15" alignment="CENTER" prefWidth="600" prefHeight="400">
+      fx:controller="org.example.demo.RLController" spacing="15" alignment="CENTER" prefWidth="600" prefHeight="400">
 
-    <Label text="登录" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <Label text="输入用户名密码" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
 
     <TextField fx:id="usernameField" promptText="用户名" />
     <PasswordField fx:id="passwordField" promptText="密码" />
 
-    <Button text="登录" onAction="#handleLogin"/>
+    <HBox spacing="10" alignment="CENTER" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+        <Button text="注册" onAction="#handleRegister"/>
+        <Button text="登录" onAction="#handleLogin"/>
+    </HBox>
 </VBox>
